@@ -9,13 +9,19 @@ import (
 
 func (client *Client) GetLocations(pageURL *string) (PokeLocations, error) {
 	url := baseURL + "/location-area"
-
 	if pageURL != nil {
 		url = *pageURL
 	}
+
+	if val, ok := client.cache.Get(url); ok {
+		var locations PokeLocations
+		if err := json.Unmarshal(val, &locations); err != nil {
+			return PokeLocations{}, fmt.Errorf("error in getting cache: %w", err)
+		}
+		return locations, nil
+	}
 	
 	req, err := http.NewRequest("GET", url, nil)
-	
 	if err != nil {
 		return PokeLocations{}, fmt.Errorf("error creating request: %w", err)
 	}
@@ -35,5 +41,7 @@ func (client *Client) GetLocations(pageURL *string) (PokeLocations, error) {
 	if err := json.Unmarshal(data, &locations); err != nil {
 		return PokeLocations{}, fmt.Errorf("error unmarshaling the locations: %w", err)
 	}
+
+	client.cache.Add(url, data)
 	return locations, nil
 }
