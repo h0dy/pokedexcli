@@ -8,13 +8,14 @@ import (
 
 	"github.com/h0dy/pokedexcli/internal/pokeapi"
 )
-type configURL struct {
+type config struct {
 	nextURL *string
 	previousURL *string
 	pokeapiClient pokeapi.Client
+	pokemons map[string]pokeapi.Pokemon
 }
 
-func replCommand(config *configURL) {
+func replCommand(con *config) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
@@ -36,7 +37,7 @@ func replCommand(config *configURL) {
 		if len(sliceText) > 1 {
 			args = sliceText[1:]
 		}
-		err := cmd.callback(config, args...)
+		err := cmd.callback(con, args...)
 		if err != nil {
 			fmt.Println("Error: ", err)
 		}
@@ -46,7 +47,7 @@ func replCommand(config *configURL) {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*configURL, ...string) error
+	callback    func(*config, ...string) error
 }
 
 func commands() map[string]cliCommand {
@@ -75,6 +76,11 @@ func commands() map[string]cliCommand {
 			name:        "explore <location-name>",
 			description: "list of all the Pokémon located in an area",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch <pokemon-name>",
+			description: "try to catch a pokemon!",
+			callback:    commandCatch,
 		},
 	}
 }

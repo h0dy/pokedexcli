@@ -9,3 +9,7 @@ type PokeLocations struct {
 		Url   string `json:"url"`
 	} `json:"results"`
 }
+
+type Pokemon map[string]any
+
+type Location map[string]any

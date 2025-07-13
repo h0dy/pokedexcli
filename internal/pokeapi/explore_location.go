@@ -8,7 +8,7 @@ import (
 )
 
 
-func (client *Client)ExploreLocation(name string)(map[string]any, error) {
+func (client *Client)ExploreLocation(name string)(Location, error) {
 	url := baseURL + "/location-area/" + name
 	
 	req, err := http.NewRequest("GET", url, nil)
@@ -17,7 +17,7 @@ func (client *Client)ExploreLocation(name string)(map[string]any, error) {
 	}
 	
 	if val, ok := client.cache.Get(name); ok {
-		var locationInfo map[string]any
+		var locationInfo Location
 		if err := json.Unmarshal(val, &locationInfo); err != nil {
 			return nil, fmt.Errorf("error unmarshaling cached data in ExploreLocation func: %w", err)
 		}
@@ -35,7 +35,7 @@ func (client *Client)ExploreLocation(name string)(map[string]any, error) {
 		return nil, fmt.Errorf("error reading the response in ExploreLocation func: %w", err)
 	}
 
-	var locationInfo map[string]any
+	var locationInfo Location
 	if err := json.Unmarshal(data, &locationInfo); err != nil {
 		return nil, fmt.Errorf("error unmarshaling data in ExploreLocation func: %w", err)
 	}
