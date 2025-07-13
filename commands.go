@@ -18,11 +18,10 @@ func commandHelp(con *config, args ...string) error {
 Welcome to the Pokedex!
 Usage:
 	`)
-	fmt.Println()
 	for _, cmd := range commands() {
 		fmt.Printf("%s: %s\n", cmd.name, cmd.description)
 	}
-	
+	fmt.Println()
 	return nil
 }
 
@@ -109,8 +108,27 @@ func commandCatch(con *config, args ...string) error {
 		fmt.Printf("%v was caught!\n", pokeName)
 		con.pokemons[pokeName] = pokemon
 	} else {
-		fmt.Printf("%v escaped!\n", pokeName)
+		fmt.Printf("%v escaped!\ntry again!\n", pokeName)
+	}
+	return nil
+}
+
+func commandInspect(con *config, args ...string) error {
+	if len(args) < 1 {
+		return errors.New("please provide the name of the pokemon you want to inspect")
 	}
 
+	pokeName := args[0]
+	foundPoke, ok := con.pokemons[pokeName]
+	if !ok {
+		return fmt.Errorf("you have not caught %v\ntry \"catch %v\" to try to catch it 😉", pokeName, pokeName)
+	}
+	fmt.Printf("Name: %v\nHeight: %v\nWeight: %v\nStats:\n", foundPoke["name"], foundPoke["height"], foundPoke["weight"])
+	for _, s := range foundPoke["stats"].([]any) {
+		stat := s.(map[string]any) 
+		statNum := stat["base_stat"]
+		statName := stat["stat"].(map[string]any)["name"]
+		fmt.Printf(" - %v: %v\n", statName, statNum)
+	}
 	return nil
 }
