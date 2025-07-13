@@ -51,3 +51,11 @@ Or, run it directly without building:
 ```bash
 go run .
 ```
+
+Once you're inside the project, type:
+
+```bash
+help
+```
+
+From there, you should know your way. Enjoy!
