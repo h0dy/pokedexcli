@@ -107,6 +107,7 @@ func commandCatch(con *config, args ...string) error {
 	if usersXP >= pokeXP {
 		fmt.Printf("%v was caught!\n", pokeName)
 		con.pokemons[pokeName] = pokemon
+		fmt.Println("You may now inspect it with the inspect command.")
 	} else {
 		fmt.Printf("%v escaped!\ntry again!\n", pokeName)
 	}
@@ -129,6 +130,17 @@ func commandInspect(con *config, args ...string) error {
 		statNum := stat["base_stat"]
 		statName := stat["stat"].(map[string]any)["name"]
 		fmt.Printf(" - %v: %v\n", statName, statNum)
+	}
+	return nil
+}
+
+func commandPokedex(con *config, args ...string) error {
+	if len(con.pokemons) < 1 {
+		return fmt.Errorf("your Pokedex is empty ☹️\ntry to catch some pokemon first")
+	}
+	fmt.Println("Your Pokedex")
+	for name := range con.pokemons {
+		fmt.Printf(" - %v\n", name)
 	}
 	return nil
 }
