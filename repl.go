@@ -9,8 +9,8 @@ import (
 	"github.com/h0dy/pokedexcli/internal/pokeapi"
 )
 type configURL struct {
-	next *string
-	previous *string
+	nextURL *string
+	previousURL *string
 	pokeapiClient pokeapi.Client
 }
 
@@ -32,7 +32,11 @@ func replCommand(config *configURL) {
 			fmt.Println("Unknown command")
 			continue
 		}
-		err := cmd.callback(config)
+		args := []string{}
+		if len(sliceText) > 1 {
+			args = sliceText[1:]
+		}
+		err := cmd.callback(config, args...)
 		if err != nil {
 			fmt.Println("Error: ", err)
 		}
@@ -42,7 +46,7 @@ func replCommand(config *configURL) {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*configURL) error
+	callback    func(*configURL, ...string) error
 }
 
 func commands() map[string]cliCommand {
@@ -66,6 +70,11 @@ func commands() map[string]cliCommand {
 			name:        "mapb",
 			description: "Displays the names/previous names of 20 location areas in the Pokemon world",
 			callback:    commandMapb,
+		},
+		"explore": {
+			name:        "explore <location-name>",
+			description: "list of all the Pokémon located in an area",
+			callback:    commandExplore,
 		},
 	}
 }

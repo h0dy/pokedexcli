@@ -16,7 +16,7 @@ func (client *Client) GetLocations(pageURL *string) (PokeLocations, error) {
 	if val, ok := client.cache.Get(url); ok {
 		var locations PokeLocations
 		if err := json.Unmarshal(val, &locations); err != nil {
-			return PokeLocations{}, fmt.Errorf("error in getting cache: %w", err)
+			return PokeLocations{}, fmt.Errorf("error in unmarshaling cached data: %w", err)
 		}
 		return locations, nil
 	}
