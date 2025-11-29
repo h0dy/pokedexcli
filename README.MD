@@ -1,7 +1,5 @@
 # pokedexcli
 
-This is a project I built after completing the [Go course](https://www.boot.dev/courses/learn-golang) on [Boot.dev](https://www.boot.dev/u/hody).
-
 This is my first Go project!  
 It's a command-line REPL Pokédex.
 
